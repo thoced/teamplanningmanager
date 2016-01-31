@@ -3,6 +3,7 @@ package mainPackage;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import exceptions.NoDossierException;
 import exceptions.NoProfilException;
@@ -58,6 +59,7 @@ public class SqlTransaction extends SqlConnection
 	public Dossier[] getAllDossiers(String user) throws ClassNotFoundException, SQLException, NoDossierException
 	{
 		
+		
 		String sql = "select * from t_dossier where group_owner IN (select t_group_groupname from rel_profil_group where t_profil_user = ?)";
 		
 		// récupération du ps
@@ -86,6 +88,7 @@ public class SqlTransaction extends SqlConnection
 			}
 			
 			return dossiers;
+			
 		}
 		
 		throw new NoDossierException();

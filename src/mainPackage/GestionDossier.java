@@ -22,6 +22,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import model.Dossier;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JScrollPane;
@@ -124,7 +125,15 @@ public class GestionDossier extends JDialog
 			SqlTransaction trans = new SqlTransaction();
 			try
 			{
-				trans.getAllDossiers(System.getProperty("user.name"));
+				Dossier[] dossiers = trans.getAllDossiers(System.getProperty("user.name"));
+				if(dossiers != null)
+				{
+					for(Dossier d : dossiers)
+					{
+						System.out.println(d.name);
+					}
+				}
+				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
