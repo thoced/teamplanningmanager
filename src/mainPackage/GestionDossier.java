@@ -10,10 +10,12 @@ import javax.swing.JPanel;
 
 import java.awt.FlowLayout;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;
 
@@ -42,15 +44,28 @@ import exceptions.NoDossierException;
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 
-public class GestionDossier extends JDialog 
+import javax.swing.ListSelectionModel;
+
+public class GestionDossier extends JDialog implements ActionListener
 {
 	private JList listDossiers;
-	private JPanel panelChoose;
 	private JButton buttonAdd;
 	private JButton buttonSub;
 	private JList listDossierSelected;
+	
+	private List<Object> listDossier = null;
 	
 	private Model model;
 	
@@ -58,7 +73,7 @@ public class GestionDossier extends JDialog
 		super(arg0, arg1, arg2);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		this.setSize(640, 320);
+		this.setSize(655, 320);
 		this.setLocationRelativeTo(null);
 		
 		JPanel panelbutton = new JPanel();
@@ -67,51 +82,144 @@ public class GestionDossier extends JDialog
 		getContentPane().add(panelbutton, BorderLayout.SOUTH);
 		
 		JButton buttonAnnuler = new JButton("Annuler");
+		buttonAnnuler.setActionCommand("ANNULER");
+		buttonAnnuler.addActionListener(this);
 		panelbutton.add(buttonAnnuler);
 		
 		JButton buttonOk = new JButton("Confirmer");
+		buttonOk.setActionCommand("CONFIRMER");
+		buttonOk.addActionListener(this);
 		panelbutton.add(buttonOk);
 		
 		JPanel panelDossier = new JPanel();
-		getContentPane().add(panelDossier, BorderLayout.WEST);
-		panelDossier.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		listDossiers = new JList();
-		JScrollPane scrollPane = new JScrollPane(listDossiers);
-		scrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
-		panelDossier.add(scrollPane);
-		
-		panelChoose = new JPanel();
-		getContentPane().add(panelChoose, BorderLayout.CENTER);
-		
-		buttonSub = new JButton("Enlever");
-		panelChoose.setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("68px"),},
-			new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("23px"),}));
-		
-		buttonAdd = new JButton("Ajouter");
-		panelChoose.add(buttonAdd, "2, 2, center, top");
-		panelChoose.add(buttonSub, "2, 4, center, top");
-		
-		JPanel panelDossierSelected = new JPanel();
-		getContentPane().add(panelDossierSelected, BorderLayout.EAST);
-		panelDossierSelected.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		getContentPane().add(panelDossier, BorderLayout.CENTER);
+		panelDossier.setLayout(null);
 		
 		listDossierSelected = new JList();
-		JScrollPane scrollPane_1 = new JScrollPane(listDossierSelected);
-		scrollPane_1.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
-		panelDossierSelected.add(scrollPane_1);
+		listDossierSelected.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listDossierSelected.setModel(new DefaultListModel());
+		
+			JScrollPane scrollPane_1 = new JScrollPane(listDossierSelected);
+			scrollPane_1.setBounds(419, 11, 210, 132);
+			panelDossier.add(scrollPane_1);
+			scrollPane_1.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
+			
+			listDossiers = new JList();
+			JScrollPane scrollPane = new JScrollPane(listDossiers);
+			scrollPane.setBounds(10, 11, 210, 132);
+			panelDossier.add(scrollPane);
+			scrollPane.setViewportBorder(new LineBorder(new Color(0, 0, 0)));
+			
+			buttonAdd = new JButton("Ajouter");
+			buttonAdd.setBounds(277, 11, 89, 36);
+			panelDossier.add(buttonAdd);
+			buttonAdd.setActionCommand("AJOUTER");
+			
+			buttonSub = new JButton("Enlever");
+			buttonSub.setBounds(277, 58, 89, 36);
+			panelDossier.add(buttonSub);
+			buttonSub.setActionCommand("ENLEVER");
+			buttonSub.addActionListener(this);
+			buttonAdd.addActionListener(this);
 		
 		// init model
 		model = new Model();
 		
 		
 	}
+	
+	
+	
+	public JList getListDossiers() {
+		return listDossiers;
+	}
+
+
+
+	private void ajouterDossiers()
+	{
+		
+		// transfert des dossier sélèctionnés vers la liste des dossiers selectionnés
+		List<Dossier> listDossier = this.listDossiers.getSelectedValuesList();
+		DefaultListModel<Dossier> lm =  (DefaultListModel<Dossier>) this.listDossierSelected.getModel();
+		
+		for(Dossier d : listDossier)
+		{
+			if(!lm.contains(d))
+			{
+				lm.addElement(d);
+				// suppression dans la liste primaire du dossier ajouté
+				
+			}
+		}
+		this.listDossierSelected.setModel(lm);
+		
+		
+		
+	}
+	
+	private void enleverDossier()
+	{
+		int[] indices = this.listDossierSelected.getSelectedIndices();
+		if(indices != null)
+		{
+			for(int i : indices)
+				((DefaultListModel)this.listDossierSelected.getModel()).removeElementAt(i);
+		}
+		
+	}
+	
+	private void confirmer() 
+	{
+		listDossier = Arrays.asList(((DefaultListModel)this.listDossierSelected.getModel()).toArray());
+		
+		try
+		{
+			// enregistrement dans un fichier de configuration des dossiers devant être visualisés
+			
+			// création du répertoire TeamPlanningMangerConfig si il n'existe pas
+			File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "TeamPlanningManagerConfig");
+			file.mkdir();
+			// création du fichier dossiers.cfg
+			file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "TeamPlanningManagerConfig" + System.getProperty("file.separator") + "dossiers.cfg");
+			FileOutputStream fos = new FileOutputStream(file);
+			StringBuilder builder =  new StringBuilder();
+			for(Object o : listDossier)
+			{
+				((Dossier)o).toString();
+				builder.append(((Dossier)o).toString() + System.getProperty("line.separator"));
+			}
+
+			fos.write(builder.toString().getBytes());
+			fos.flush();
+			fos.close();
+		}
+		catch(IOException e)
+		{
+			JOptionPane.showMessageDialog(null, "(GestionDossier) erreur IO:  " + e.getMessage());
+		}
+		
+		this.setVisible(false);
+
+	}
+	
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0)
+	{
+		switch(arg0.getActionCommand())
+		{
+		case "AJOUTER": ajouterDossiers();break;
+		
+		case "ENLEVER" : enleverDossier();break;
+		
+		case "CONFIRMER" : confirmer();break;
+		
+		case "ANNULER" : this.setVisible(false);break;
+		}
+		
+	}
+	
 
 	public class Model
 	{
@@ -128,10 +236,12 @@ public class GestionDossier extends JDialog
 				Dossier[] dossiers = trans.getAllDossiers(System.getProperty("user.name"));
 				if(dossiers != null)
 				{
+					// affichage des dossiers
+					DefaultListModel lm = new DefaultListModel();
 					for(Dossier d : dossiers)
-					{
-						System.out.println(d.name);
-					}
+						lm.addElement(d);
+					
+					view.listDossiers.setModel(lm);
 				}
 				
 			} catch (ClassNotFoundException e) {
@@ -148,5 +258,7 @@ public class GestionDossier extends JDialog
 			
 		}
 	}
+
+	
 }
 

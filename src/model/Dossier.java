@@ -9,4 +9,13 @@ public class Dossier
 	public String dossier_instruction;
 	public String comment;
 	
+	@Override
+	public String toString()
+	{
+		
+		return name;
+	}
+	
+	
+	
 }

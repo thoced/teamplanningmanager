@@ -85,6 +85,7 @@ public class SqlTransaction extends SqlConnection
 				dossier.dossier_instruction = result.getString("dossier_instruction");
 				dossier.comment = result.getString("comment");
 				dossiers[cpt] = dossier;
+				cpt++;
 			}
 			
 			return dossiers;

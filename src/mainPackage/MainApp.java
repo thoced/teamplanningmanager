@@ -2,6 +2,7 @@ package mainPackage;
 
 import java.awt.EventQueue;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,6 +33,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JTabbedPane;
 
 public class MainApp implements ActionListener {
 
@@ -42,6 +44,7 @@ public class MainApp implements ActionListener {
 	private JMenuItem mFermer;
 	private JMenu menuGestion;
 	private JMenuItem mGestionDossier;
+	private JTabbedPane tabbedDossiers;
 
 	/**
 	 * Launch the application.
@@ -101,6 +104,9 @@ public class MainApp implements ActionListener {
 			panelStatut.add(labelStatut);
 			labelStatut.setText("Profil connecté: " + profil.user + "," + profil.nom + "," + profil.prenom);
 			
+			tabbedDossiers = new JTabbedPane(JTabbedPane.TOP);
+			frame.getContentPane().add(tabbedDossiers, BorderLayout.CENTER);
+			
 			menuBar = new JMenuBar();
 			frame.setJMenuBar(menuBar);
 			
@@ -132,6 +138,11 @@ public class MainApp implements ActionListener {
 			case "GESTION_DOSSIER":
 				GestionDossier gd = new GestionDossier(frame,"Gestion des dossier à visualiser",true);
 				gd.setVisible(true);
+				if(gd.getListDossiers() != null)
+				{
+					
+				}
+				
 			break;
 		
 			default:break;
