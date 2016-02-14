@@ -24,7 +24,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import renderers.ColorCellRenderer;
+import renderers.ColorCommentRenderer;
+import renderers.ColorStatutRenderer;
 import editors.ButtonCellEditor;
+import editors.CommentCellEditor;
 import exceptions.NoTodoException;
 
 import javax.swing.ListSelectionModel;
@@ -55,8 +58,16 @@ public class PanelInfo extends Panel implements ActionListener
 		table.setModel(model);
 		// renderers
 		table.setDefaultRenderer(Color.class, new ColorCellRenderer());
+		table.setDefaultRenderer(JScrollPane.class, new ColorCommentRenderer());
+		table.getColumnModel().getColumn(4).setCellRenderer(new ColorStatutRenderer()); // statut color
 		// editors
 		table.setDefaultEditor(JButton.class, new ButtonCellEditor());
+		table.setDefaultEditor(JScrollPane.class, new CommentCellEditor());
+		
+		table.setRowHeight(64);
+		table.getColumnModel().getColumn(0).setPreferredWidth(24);
+		table.getColumnModel().getColumn(1).setPreferredWidth(256);
+	
 		
 		
 		JPanel panelButton = new JPanel();

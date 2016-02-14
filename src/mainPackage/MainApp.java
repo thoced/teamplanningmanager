@@ -1,7 +1,12 @@
 package mainPackage;
 
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -39,7 +44,7 @@ import javax.swing.JTabbedPane;
 
 public class MainApp implements ActionListener {
 
-	private JFrame frame;
+	static public JFrame frame;
 	private JLabel labelStatut;
 	private JMenuBar menuBar;
 	private JMenu menuFichier;
@@ -76,7 +81,7 @@ public class MainApp implements ActionListener {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setSize(800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -126,9 +131,66 @@ public class MainApp implements ActionListener {
 			mGestionDossier.setActionCommand("GESTION_DOSSIER");
 			mGestionDossier.addActionListener(this);
 			
+			// load Setup dossier
+			this.loadSetupDossiers();
+			
 		} catch (NoProfilException e) 
 		{
 			JOptionPane.showConfirmDialog(null, "Profil: " + e.getMessage() +  System.getProperty("user.name"));
+		}
+	}
+	
+	private void loadSetupDossiers()
+	{
+		
+		// ouverture du fichier dossiers.cfg
+		File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "TeamPlanningManagerConfig" + System.getProperty("file.separator") + "dossiers.cfg");
+		FileInputStream fis;
+		try
+		{
+			fis = new FileInputStream(file);
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			String builder =  new String(buffer);
+			builder.trim();
+			String[] split = builder.split(System.getProperty("line.separator"));
+			
+			
+			List<Dossier> dossiers = new ArrayList();
+			for(String s : split)
+			{
+				
+				if(s.length() != 0 || !s.isEmpty())
+				{
+					Dossier d = new Dossier();
+					d.name = s;
+					dossiers.add(d);
+				}
+			}
+			
+			// setupdossier
+			this.setupDossiers(dossiers);
+			fis.close();
+			
+			
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	private void setupDossiers(List<Dossier> dossiers)
+	{
+		for(Dossier dos : dossiers)
+		{
+			tabbedDossiers.add(new PanelInfo(dos.name));
+		
 		}
 	}
 
@@ -143,10 +205,8 @@ public class MainApp implements ActionListener {
 				if(gd.getListDossiers() != null)
 				{
 					List<Dossier> dossiers = gd.getListDossiers();
-					for(Dossier dos : dossiers)
-					{
-						tabbedDossiers.add(new PanelInfo(dos.name));
-					}
+					this.setupDossiers(dossiers);
+					
 				}
 				
 			break;

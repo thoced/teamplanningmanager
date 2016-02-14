@@ -15,7 +15,10 @@ public class ColorCellRenderer extends DefaultTableCellRenderer
 	
 		this.setText("");
 		
-		this.setBackground((Color) value);
+		if((boolean)value)
+			this.setBackground(Color.GREEN);
+		else
+			this.setBackground(Color.ORANGE);
 		
 		return this;
 	}

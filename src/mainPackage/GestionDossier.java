@@ -47,6 +47,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -244,6 +245,8 @@ public class GestionDossier extends JDialog implements ActionListener
 					view.listDossiers.setModel(lm);
 				}
 				
+				
+				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -256,9 +259,11 @@ public class GestionDossier extends JDialog implements ActionListener
 			}
 			
 			
+			
+			
 		}
+	
 	}
-
 	
 }
 

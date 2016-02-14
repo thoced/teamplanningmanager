@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
@@ -32,13 +33,16 @@ public class MyTableModel extends DefaultTableModel
 		{
 			switch(column)
 			{
-			case 1 : info.text = ((JTextField)value).getText();
-			break;
-			
-			default : break;
+				case 1 : info.text = (String)value;
+				break;
+				
+				case 4: info.statut = (boolean)value;
+				break;
+				
+				default : break;
 			}
 			
-			// update dans la base de donnée
+			// update dans la base de donnée	
 			info.updateData();
 		}
 		
@@ -81,7 +85,7 @@ public class MyTableModel extends DefaultTableModel
 	public boolean isCellEditable(int row, int column) 
 	{
 				
-		if(column == 1 || column == 5)
+		if(column == 1 || column == 4 || column == 5)
 			return true;
 		else
 			return false;
@@ -94,13 +98,13 @@ public class MyTableModel extends DefaultTableModel
 		{
 		case 0 : return JLabel.class;
 		
-		case 1: return JTextField.class;
+		case 1: return JScrollPane.class;
 		
 		case 2: return  JLabel.class;
 		
 		case 3: return JLabel.class;
 		
-		case 4: return Color.class;
+		case 4: return JButton.class;
 		
 		case 5: return JButton.class;
 		
@@ -124,12 +128,11 @@ public class MyTableModel extends DefaultTableModel
 		
 		case 3 : return  infos.get(row).date_create.toString();
 		
-		case 4: { if( infos.get(row).statut)
-					return Color.GREEN;
-				  else
-					return Color.ORANGE;
+		case 4:  return infos.get(row).statut;
+					
+				  
 			
-				}
+				
 		
 		case 5: return "test";
 		
