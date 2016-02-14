@@ -130,8 +130,8 @@ public class GestionDossier extends JDialog implements ActionListener
 	
 	
 	
-	public JList getListDossiers() {
-		return listDossiers;
+	public List getListDossiers() {
+		return listDossier;
 	}
 
 

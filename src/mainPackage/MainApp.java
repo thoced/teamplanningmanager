@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import model.Dossier;
 import model.Profil;
 import exceptions.NoProfilException;
 
@@ -31,6 +32,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
@@ -140,7 +142,11 @@ public class MainApp implements ActionListener {
 				gd.setVisible(true);
 				if(gd.getListDossiers() != null)
 				{
-					
+					List<Dossier> dossiers = gd.getListDossiers();
+					for(Dossier dos : dossiers)
+					{
+						tabbedDossiers.add(new PanelInfo(dos.name));
+					}
 				}
 				
 			break;
