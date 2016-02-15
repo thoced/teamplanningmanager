@@ -11,6 +11,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 import mainPackage.MainApp;
+import model.Statut;
 
 
 public class ButtonCellEditor extends AbstractCellEditor implements TableCellEditor,ActionListener {
@@ -38,7 +39,7 @@ public class ButtonCellEditor extends AbstractCellEditor implements TableCellEdi
 	public Component getTableCellEditorComponent(JTable arg0, Object arg1,
 			boolean arg2, int arg3, int arg4) 
 	{
-		value = (boolean)arg1;
+		value = ((Statut)arg1).statut;
 		return button;
 	}
 
@@ -46,12 +47,14 @@ public class ButtonCellEditor extends AbstractCellEditor implements TableCellEdi
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		
-		int ret = JOptionPane.showConfirmDialog(MainApp.frame, "Validez-vous le changement du statut ?","Changement de statut de la tâche",0);
+		int ret = JOptionPane.showConfirmDialog(MainApp.frame, "Etes-vous sûr de cloturer la tâche ? - Une fois cloturée, la tâche ne peut plus être modifiée","Cloture de la tâche",0);
 		if(ret == JOptionPane.OK_OPTION)
 			{
-			value=!value;
+				value=!value;
+				
 			}
 		this.fireEditingStopped();
+		
 		
 		
 		

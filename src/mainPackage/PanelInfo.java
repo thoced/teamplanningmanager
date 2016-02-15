@@ -23,10 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import renderers.ButtonDeleteRenderer;
 import renderers.ColorCellRenderer;
 import renderers.ColorCommentRenderer;
 import renderers.ColorStatutRenderer;
 import editors.ButtonCellEditor;
+import editors.ButtonDeleteCellEditor;
 import editors.CommentCellEditor;
 import exceptions.NoTodoException;
 
@@ -57,16 +59,19 @@ public class PanelInfo extends Panel implements ActionListener
 		model = new MyTableModel();
 		table.setModel(model);
 		// renderers
-		table.setDefaultRenderer(Color.class, new ColorCellRenderer());
 		table.setDefaultRenderer(JScrollPane.class, new ColorCommentRenderer());
 		table.getColumnModel().getColumn(4).setCellRenderer(new ColorStatutRenderer()); // statut color
+		table.getColumnModel().getColumn(5).setCellRenderer(new ButtonDeleteRenderer());
 		// editors
-		table.setDefaultEditor(JButton.class, new ButtonCellEditor());
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonCellEditor());
+		table.getColumnModel().getColumn(5).setCellEditor(new ButtonDeleteCellEditor());
 		table.setDefaultEditor(JScrollPane.class, new CommentCellEditor());
 		
 		table.setRowHeight(64);
-		table.getColumnModel().getColumn(0).setPreferredWidth(24);
-		table.getColumnModel().getColumn(1).setPreferredWidth(256);
+		table.getColumnModel().getColumn(0).setPreferredWidth(16);
+		table.getColumnModel().getColumn(1).setPreferredWidth(320);
+		table.getColumnModel().getColumn(2).setPreferredWidth(32);
+		table.getColumnModel().getColumn(5).setPreferredWidth(16);
 	
 		
 		

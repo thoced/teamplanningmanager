@@ -123,6 +123,8 @@ public class SqlTransaction extends SqlConnection
 			info.date_create = result.getDate("datestart");
 			info.statut = result.getBoolean("isfinish");
 			info.text = result.getString("comment");
+			info.profil_cloture = result.getString("profil_cloture");
+			info.date_cloture = result.getDate("dateend");
 			infos[cpt] = info;
 			cpt++;
 		}
@@ -153,14 +155,16 @@ public class SqlTransaction extends SqlConnection
 	
 	public void updateTodo(int id,Info info) throws ClassNotFoundException, SQLException
 	{
-		String sql = "update t_todo set datestart = ?,isfinish = ?,comment = ? where id = ?";
+		String sql = "update t_todo set datestart = ?,dateend = ?, isfinish = ?,comment = ?,profil_cloture = ? where id = ?";
 		
 		// récupération du ps
 		PreparedStatement ps = this.getStatement(sql);
 		ps.setDate(1, info.date_create);
-		ps.setBoolean(2, info.statut);
-		ps.setString(3, info.text);
-		ps.setInt(4, id);
+		ps.setDate(2, info.date_cloture);
+		ps.setBoolean(3, info.statut);
+		ps.setString(4, info.text);
+		ps.setString(5, info.profil_cloture);
+		ps.setInt(6, id);
 			
 				
 		ps.executeUpdate();

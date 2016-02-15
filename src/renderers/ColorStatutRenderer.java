@@ -8,6 +8,8 @@ import java.awt.FontMetrics;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import model.Statut;
+
 public class ColorStatutRenderer extends DefaultTableCellRenderer 
 {
 
@@ -26,10 +28,12 @@ public class ColorStatutRenderer extends DefaultTableCellRenderer
 			boolean isSelected, boolean hasFocus, int row, int column) 
 	
 	{
-		if((boolean)value)
+		
+		
+		if(((Statut)value).statut)
 		{
 			this.setBackground(Color.GREEN);
-			this.setText("Tâche cloturée");
+			this.setText("Cloturée par " + ((Statut)value).owner);
 		
 		}
 		else

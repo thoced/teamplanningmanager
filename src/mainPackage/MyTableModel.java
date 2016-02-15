@@ -2,6 +2,7 @@ package mainPackage;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -14,6 +15,7 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 import model.Info;
+import model.Statut;
 
 public class MyTableModel extends DefaultTableModel 
 {
@@ -37,7 +39,9 @@ public class MyTableModel extends DefaultTableModel
 				break;
 				
 				case 4: info.statut = (boolean)value;
-				break;
+						info.profil_cloture = Setup.getProfil().nom;
+						info.date_cloture = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+						break;
 				
 				default : break;
 			}
@@ -84,11 +88,21 @@ public class MyTableModel extends DefaultTableModel
 	@Override
 	public boolean isCellEditable(int row, int column) 
 	{
+		if(infos.get(row).statut == false) // si le statut est toujours false, on peut accédé à certain champs
+		{
 				
-		if(column == 1 || column == 4 || column == 5)
-			return true;
+			if(column == 1 || column == 4)
+				return true;
+			else
+				return false;
+		}
 		else
-			return false;
+		{
+			if(column == 5)
+				return true;
+			else
+				return false; // toute la fiche est innacessible
+		}
 	}
 
 	@Override
@@ -128,13 +142,11 @@ public class MyTableModel extends DefaultTableModel
 		
 		case 3 : return  infos.get(row).date_create.toString();
 		
-		case 4:  return infos.get(row).statut;
-					
-				  
-			
-				
+		case 4:  Statut statut = new Statut(infos.get(row).statut,infos.get(row).profil_cloture);
+				 return statut;		
 		
-		case 5: return "test";
+		case 5: statut = new Statut(infos.get(row).statut,infos.get(row).profil_cloture);
+		 		return statut;
 		
 		default : return null;
 		}
