@@ -84,32 +84,10 @@ public class PanelInfo extends Panel implements ActionListener
 		panelButton.add(buttonAddInfo);
 		
 		// setup des Todo
-		this.setupTodo();
+		model.setupTodo(this.name_dossier);
 	}
 	
-	private void setupTodo()
-	{
-		// réception des dossiers
-		model.removeAll();
-		SqlTransaction trans = new SqlTransaction();
-		try
-		{
-			Info[] infos = trans.getAllToDo(this.name_dossier);
-			// création du tableau 
-			if(infos != null)
-			{
-				for(Info i : infos)
-				{
-					model.addRow(i);
-					
-				}
-			}
-			
-		} catch (ClassNotFoundException | SQLException | NoTodoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 	private void createNewTodo()
 	{
@@ -133,7 +111,7 @@ public class PanelInfo extends Panel implements ActionListener
 		switch(arg0.getActionCommand())
 		{
 			case "ADD_TODO" : this.createNewTodo();// créer une nouvelle tache
-							  this.setupTodo();   // recharge les tâches
+							  this.model.setupTodo(this.name_dossier);
 							  this.table.updateUI();
 							  break;
 		}

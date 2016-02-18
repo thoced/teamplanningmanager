@@ -31,4 +31,20 @@ public class Info
 		}
 	}
 	
+	public void deleteData()
+	{
+		// suppression de la tâche en SQL
+		SqlTransaction trans = new SqlTransaction();
+		try 
+		{
+		trans.deleteTodo(id_sql);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

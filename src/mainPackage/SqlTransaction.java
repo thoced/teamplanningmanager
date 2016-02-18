@@ -169,4 +169,17 @@ public class SqlTransaction extends SqlConnection
 				
 		ps.executeUpdate();
 	}
+	
+	public void deleteTodo(int id) throws ClassNotFoundException, SQLException
+	{
+		String sql = "delete from t_todo where id = ? AND isfinish = TRUE";
+		
+		// récupération du ps
+		PreparedStatement ps = this.getStatement(sql);
+		ps.setInt(1, id);
+		this.ExecuteTransaction(ps);
+		
+	
+		
+	}
 }

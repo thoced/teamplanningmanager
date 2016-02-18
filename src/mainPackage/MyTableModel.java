@@ -1,6 +1,7 @@
 package mainPackage;
 
 import java.awt.Color;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
+import exceptions.NoTodoException;
 import model.Info;
 import model.Statut;
 
@@ -23,6 +25,8 @@ public class MyTableModel extends DefaultTableModel
 	private List<Info> infos = new ArrayList<Info>();
 	// nom des columns
 	private String[] columns_name = {"num","todo","créateur","date de création","statut","action"};
+	// nom du dossier
+	private String nameDossier;
 
 	
 	
@@ -58,10 +62,27 @@ public class MyTableModel extends DefaultTableModel
 			infos.add(info);
 	}
 	
+	public Info getRow(int id) throws NoTodoException
+	{
+		if(infos != null)
+			return infos.get(id);
+		else
+		throw new NoTodoException();
+	}
+	
 	public void removeAll()
 	{
 		if(infos != null)
 			infos.clear();
+	}
+	
+	
+
+	@Override
+	public void removeRow(int row) 
+	{
+		if(infos != null)
+			infos.remove(row);
 	}
 
 	@Override
@@ -152,6 +173,37 @@ public class MyTableModel extends DefaultTableModel
 		}
 	}
 	
+	public void setupTodo(String nameDossier)
+	{
+		this.nameDossier = nameDossier;
+		// réception des dossiers
+		this.removeAll();
+		SqlTransaction trans = new SqlTransaction();
+		try
+		{
+			Info[] infos = trans.getAllToDo(nameDossier);
+			// création du tableau 
+			if(infos != null)
+			{
+				for(Info i : infos)
+				{
+					this.addRow(i);
+					
+				}
+			}
+			
+		} catch (ClassNotFoundException | SQLException | NoTodoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	
+	public void setupTodo()
+	{
+		if(this.nameDossier == null)
+			return;
+		
+		this.setupTodo(this.nameDossier);
+		
+	}
 }

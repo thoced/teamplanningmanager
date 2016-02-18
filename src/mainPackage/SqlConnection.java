@@ -1,6 +1,8 @@
 package mainPackage;
 import java.sql.*;
 
+import javax.swing.JOptionPane;
+
 public class SqlConnection
 {
 	private static Connection connection;
@@ -26,6 +28,8 @@ public class SqlConnection
 		
 	}
 	
+	
+	
 	protected PreparedStatement getStatement(String sql) throws SQLException, ClassNotFoundException
 	{
 		this.Connection();
@@ -42,6 +46,26 @@ public class SqlConnection
 		ps.executeUpdate();
 	}
 	
+	protected void SetAutoCommit(boolean v)
+	{
+		try 
+		{
+			connection.setAutoCommit(v);
+		} catch (SQLException e) 
+		{
+			JOptionPane.showMessageDialog(MainApp.frame, "(SqlConnection) probleme de modification de l'auto-commit : " + e.getMessage());
+		}
+	}
 	
+	protected void ForceCommit()
+	{
+		try {
+			connection.commit();
+		} catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(MainApp.frame, "(SqlConnection) probleme lors du ForceCommit : " + e.getMessage());
+		}
+	}
 	
 }
